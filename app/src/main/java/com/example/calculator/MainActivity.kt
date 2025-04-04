@@ -1,28 +1,11 @@
 package com.example.calculator
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.calculator.databinding.ActivityMainBinding
 import net.objecthunter.exp4j.ExpressionBuilder
-
-/*
-TODO
-- Написать логику +-/%, чтобы это работало с числами -31+31 = 0 (30.03 - 31.03) ✅
-
-- Сделать отображение счета в реальном времени (03.04 - 04.04) (31.03)✅
-
-- При нажатии на равно сделать так, чтобы строка менялась местами с другой строкой и
-шрифты тоже менялись размерами (03.04 - 04.04) ✅
-
-- Сделать AC / C - чтобы последнее выражение убиралось
-- Сделать, чтобы история была
-- Сделать RecycleView (с историей)
- */
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -39,8 +22,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        historyList.addAll(HistoryStorageManager.loadHistory(this))
 
         historyAdapter = HistoryAdapter(historyList)
+
         binding.historyRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity).apply {
                 stackFromEnd = true
@@ -57,18 +42,13 @@ class MainActivity : AppCompatActivity() {
         val tvComma = binding.tvComma
         val ivDivide = binding.divide
 
-        val tvInputText = binding.inputText
-
         val tvButtons = listOf(
             binding.tv0, binding.tv1, binding.tv2, binding.tv3, binding.tv4,
             binding.tv5, binding.tv6, binding.tv7, binding.tv8, binding.tv9
         )
 
-        for (button in tvButtons) {
-            button.setOnClickListener {
-                addNumber(button.text.toString())
-            }
-        }
+        for (button in tvButtons)
+            button.setOnClickListener { addNumber(button.text.toString()) }
 
         ivDivide.setOnClickListener { addSymbol("÷") }
         tvMinus.setOnClickListener { addSymbol("-") }
@@ -76,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         tvMultiple.setOnClickListener { addSymbol("×") }
         tvComma.setOnClickListener { addSymbol(",") }
 
-        //✅ Ready
+
         binding.tvClearHistory.setOnClickListener { clearHistory() }
         binding.ivEraselast.setOnClickListener { eraseLast() }
 
@@ -85,15 +65,13 @@ class MainActivity : AppCompatActivity() {
             applyPercent()
         }
 
-        //✅ Ready
+
         binding.tvClear.setOnClickListener {
             setDefaultStyleTextViews()
             binding.linearNumbers.visibility = View.GONE
             clearText()
         }
 
-
-        //✅ Ready
         binding.ivEquals.setOnClickListener {
             isEquals = true
 
@@ -101,6 +79,18 @@ class MainActivity : AppCompatActivity() {
                 setReverseStyleTextViews()
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        HistoryStorageManager.saveHistory(this, historyList)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        HistoryStorageManager.saveHistory(this, historyList)
+    }
+
+
 
     //✅ Ready
     private fun eraseLast() {
@@ -125,11 +115,9 @@ class MainActivity : AppCompatActivity() {
 
         if(isEquals) {
             addItemToHistory()
-
-            // После ввода символа строка с input станет результатом
-            binding.inputText.text = binding.resultText.text.toString()
-
             setDefaultStyleTextViews()
+
+            binding.inputText.text = binding.resultText.text.toString()
             isEquals = false
         }
 
@@ -202,9 +190,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Извлекает последнее число (включая экспоненциальные формы типа 3.65E-4).
-     */
     private fun extractLastNumber(expression: String): String? {
         val regex = Regex("[-]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?$")
         return regex.find(expression)?.value
@@ -248,7 +233,6 @@ class MainActivity : AppCompatActivity() {
         val inputText = binding.inputText.text.toString()
         val result = binding.resultText.text.toString()
 
-        // Добавляем в историю
         if (binding.inputText.text != "0") {
             historyAdapter.addItem(inputText, "= $result")
             binding.historyRecyclerView.smoothScrollToPosition(historyAdapter.itemCount - 1)
@@ -275,5 +259,4 @@ class MainActivity : AppCompatActivity() {
         binding.equalsResultText
             .setTextAppearance(R.style.TextAppearance_AppCompat_Numbers_Equals)
     }
-
 }

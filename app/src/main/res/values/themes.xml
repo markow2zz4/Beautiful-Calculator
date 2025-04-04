@@ -1,11 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Calculator" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Calculator" parent="Theme.Design.Light">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Calculator" parent="Base.Theme.Calculator" />
+    <style name="Theme.Calculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Делает ActionBar прозрачным -->
+        <item name="android:actionBarStyle">@style/TransparentActionBar</item>
+        <!-- Делает StatusBar прозрачным, если нужно -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Стиль для прозрачного ActionBar -->
+    <style name="TransparentActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item> <!-- убирает тень -->
+    </style>
+
 
     <style name="TextAppearance.AppCompat.Numbers" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">@font/sniglet_regular</item>

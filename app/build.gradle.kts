@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.constraintlayout)
     
     implementation(libs.exp4j)
+    implementation(libs.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
