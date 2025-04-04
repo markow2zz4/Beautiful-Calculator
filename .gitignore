@@ -14,3 +14,61 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+.idea
+gradle
+gradlew*
+caches
+daemon
+
+# Файлы IDE
+.idea/
+
+# Файлы сборки Gradle
+.gradle/
+build/
+*/build/
+
+# Логи
+*.log
+
+# Кэш Android Studio
+.cxx/
+*.hprof
+
+# Кэш Kotlin/Java
+*.class
+
+# Папки сгенерированного кода
+generated/
+captures/
+
+# Конфигурации ОС
+Thumbs.db
+
+# Файлы настроек пользователя Android Studio
+.vscode/
+*.iws
+*.ipr
+
+# Артефакты сборки
+*.apk
+*.ap_
+*.aab
+
+# Кэш NDK
+.externalNativeBuild/
+
+# IntelliJ
+out/
+
+# Firebase и Google Services — оставить google-services.json, но .xml и сгенерированные не включать
+**/google-services.json
+
+# Crashlytics и Fabric
+app/fabric.properties
+crashlytics.properties
+
+# Личное
+*.keystore
+*.jks
